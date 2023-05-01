@@ -17,11 +17,45 @@ class LinkedList {
     }
 
     insertAt(value, index) {
-
+        if (!this.isIndexValid(index, `LinkedList.insertAt(value, index) called with an invalid index: ${index}. Min is 0, max is ${this.size() - 1}`))
+            return;
+        
+        let subsequentNode = this.at(index);
+        let previousNode = this.at(index - 1);
+        let newNode = new Node(value, subsequentNode);
+        if (previousNode)
+            previousNode.nextNode = newNode;
+        else
+            this.headNode = newNode;
     }
 
     removeAt(index) {
+        // Odin just says 'remove the node at the given index' but I will return it at the end of the function like you would with a pop()
 
+        // Make sure the headNode cannot be removed, so consistent with pop()
+        let size = this.size();
+        if (size <= 1 || !this.isIndexValid(index, `LinkedList.RemoveAt(value, index) called with an invalid index: ${index}. Min is 0, max is ${size - 1}`))
+            return null;
+
+        let previousNode = this.at(index - 1);
+        // Do not get thisNode from previousNode.nextNode - previousNode could be null!
+        let thisNode = this.at(index);
+        let subsequentNode = thisNode.nextNode;
+
+        if (previousNode)
+            previousNode.nextNode = subsequentNode;
+        else
+            this.headNode = subsequentNode;
+        
+        return thisNode;
+    }
+
+    isIndexValid(index, errorMessage) {
+        if (index < 0 || index >= this.size()) {
+            console.warn(errorMessage);
+            return false;
+        } else 
+            return true;
     }
 
     size() {
